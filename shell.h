@@ -1,5 +1,5 @@
-#ifndef SHELL_H
-#define SHELL_H
+#ifndef _SHELL_H
+#define _SHELL_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,21 +18,21 @@
 #define BUF_FLUSH -1
 
 /*for command chaining*/
-#define CMD_NORM 0
+#define CMD_NORM	0
 #define CMD_OR		1
 #define CMD_AND		2
-#define CMD_CHAIN 3
+#define CMD_CHAIN	3
 
 /*for convert_number()*/
-#define CONVERT_LOWERCASE 1
-#define CONVERT_UNSIGNED  2
+#define CONVERT_LOWERCASE	1
+#define CONVERT_UNSIGNED	2
 
 /*if using system getline()*/
 #define USE_GETLINE 0
 #define USE_STRTOK 0
 
-#define HIST_FILE "simple_shell_history"
-#define HIST_MAX 4096
+#define HIST_FILE	"simple_shell_history"
+#define HIST_MAX	4096
 
 extern char **environ;
 
@@ -48,7 +48,7 @@ typedef struct liststr
 	int num;
 	char *str;
 	struct liststr *next;
-}list_t;
+} list_t;
 
 /**
  * struct passinfo - contains pseudo-arguments to pass into a function
@@ -90,33 +90,36 @@ typedef struct passinfo
 	int env_changed;
 	int status;
 
-	char **cmd_buf;
-	int cmd_buf_type;
+	char **cmd_buf; /* pointer to cmd; chain buffer, for memory mangt */
+	int cmd_buf_type; /* CMD_type ||, &&, ; */
 	int readfd;
 	int histcount;
-}info_t;
+} info_t;
 
-#define INFO_INIT \{NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, 0, 0, 0}
+#define INFO_INIT \
+{NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, \
+	0, 0, 0}
 
 /*
  * struct builtin - contains a builtin string and related function
+ *
  * @type: the builtin command flag
  * @func: the function
  */
 typedef struct builtin
 {
 	char *type;
-	int (*func)(info_t*);
-}builtin_table;
+	int (*func)(info_t *);
+} builtin_table;
 
 /*toem_shloop.c*/
-int hsh(info_t*, char **);
+int hsh(info_t *, char **);
 int find_builtin(info_t *);
 void find_cmd(info_t *);
 void fork_cmd(info_t *);
 
 /*toem_parser.c*/
-int is_cmd(info_t*, char *);
+int is_cmd(info_t *, char *);
 char *dup_chars(char *, int, int);
 char *find_path(info_t *, char *, char *);
 
@@ -208,7 +211,7 @@ int renumber_history(info_t *info);
 list_t *add_node(list_t **, const char *, int);
 list_t *add_node_end(list_t **, const char *, int);
 size_t print_list_str(const list_t *);
-int delete_node_at_index(list_T **, unsigned int);
+int delete_node_at_index(list_t **, unsigned int);
 void free_list(list_t **);
 
 /*toem_lists1.c*/
